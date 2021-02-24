@@ -1,12 +1,11 @@
 #!/bin/sh
 # No diamond, Go for scripting is overkill !!!!!!!!!!!
 
-fetch_cmd='filler'
-
 # 1. %s: emoji name
-# 2. %s: emoji name
-# 3. %s: image but in base64
-css_fmt='img[alt=":%s:"],li[aria-label^=":%s:"]>div{object-position:-9999px -9999px;content:var(--a);background-image:var(--a)!important;--a:url("data:image/png;base64,%s")}
+# 2. %s: emoji but in Unicode
+# 3. %s: emoji name
+# 4. %s: image but in base64
+css_fmt='img[alt=":%s:"],img[alt="%s"],li[aria-label^=":%s:"]>div{object-position:-9999px -9999px;content:var(--a);background-image:var(--a)!important;--a:url("data:image/png;base64,%s")}
 '
 
 # Fetch url
@@ -56,6 +55,7 @@ while read -r l; do
 	name="${l%%\"*}"
 	unicode="${l#"${name}"\": \"}"
 	unicode="${unicode%%\",}"
+	cuni=
 
 	case $unicode in
 	\\[uU][[:alnum:]]*\\*)
@@ -75,6 +75,7 @@ while read -r l; do
 			esac
 
 			path="${path}${f}_"
+			cuni="$cuni\\$f"
 			u="${u##$f}"
 		done
 
@@ -82,9 +83,11 @@ while read -r l; do
 		;;
 	\\u[[:alnum:]]*)
 		path="./blobmoji/png/128/emoji_${unicode#\\}.png"
+		cuni="\\${unicode##\\u}"
 		;;
 	\\U[[:alnum:]]*)
 		path="./blobmoji/png/128/emoji_u${unicode##"${unicode%%[!\\U0]*}"}.png"
+		cuni="\\${unicode##"${unicode%%[!\\U0]*}"}"
 		;;
 	esac
 
@@ -94,5 +97,5 @@ while read -r l; do
 	base64="${base64%%
 }"
 
-	printf "$css_fmt" "$name" "$name" "$base64"
+	printf "$css_fmt" "$name" "$cuni" "$name" "$base64"
 done <./mapping.go
