@@ -1,5 +1,5 @@
 #+TITLE: blosh
-[[https:github.com/diamondburned/disblob][disblob]] but in sh !!!
+[[https://github.com/diamondburned/disblob][disblob]] but in sh !!!
 
 #+begin_src sh
 $ time ./blosh >css.css
