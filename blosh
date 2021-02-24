@@ -4,8 +4,8 @@
 fetch_cmd='filler'
 
 # 1. %s: emoji name
-# 3. %s: emoji name
-# 4. %s: image but in base64
+# 2. %s: emoji name
+# 3. %s: image but in base64
 css_fmt='img[alt=":%s:"],li[aria-label^=":%s:"]>div{object-position:-9999px -9999px;content:var(--a);background-image:var(--a)!important;--a:url("data:image/png;base64,%s")}
 '
 
@@ -89,10 +89,11 @@ while read -r l; do
 		;;
 	esac
 
-	
 	[ -f "$path" ] || continue
+
 	base64="$(base64 -w0 "$path")"
 	base64="${base64%%
 }"
+
 	printf "$css_fmt" "$name" "$name" "$base64"
 done <./mapping.go
