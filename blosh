@@ -46,6 +46,7 @@ echo 'img[class^="emoji"], li[id^="emoji"] > div {
 	background-size: contain !important;
 	background-repeat: no-repeat;
 }'
+
 while read -r l; do
 	case $l in
 	[!\"]*) continue ;;
@@ -54,10 +55,10 @@ while read -r l; do
 	l="${l#*\"}"
 	name="${l%%\"*}"
 	unicode="${l#"${name}"\": \"}"
+	unicode="${unicode%%\",}"
 
 	case $unicode in
-	\\[uU][[:alnum:]]*\\*\",)
-		unicode="${unicode%%\",}"
+	\\[uU][[:alnum:]]*\\*)
 		path="./blobmoji/png/128/emoji_u"
 
 		u="$unicode"
@@ -79,12 +80,10 @@ while read -r l; do
 
 		path="${path%_}.png"
 		;;
-	\\u[[:alnum:]]*\",)
-		unicode="${unicode%%\",}"
+	\\u[[:alnum:]]*)
 		path="./blobmoji/png/128/emoji_${unicode#\\}.png"
 		;;
-	\\U[[:alnum:]]*\",)
-		unicode="${unicode%%\",}"
+	\\U[[:alnum:]]*)
 		path="./blobmoji/png/128/emoji_u${unicode##"${unicode%%[!\\U0]*}"}.png"
 		;;
 	esac
