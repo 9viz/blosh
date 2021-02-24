@@ -4,10 +4,9 @@
 fetch_cmd='filler'
 
 # 1. %s: emoji name
-# 2. %s: emoji in unicode
 # 3. %s: emoji name
 # 4. %s: image but in base64
-css_fmt='img[alt=":%s:"],img[alt="%s"],li[aria-label^=":%s:"]>div{object-position:-9999px -9999px;content:var(--a);background-image:var(--a)!important;--a:url("data:image/png;base64,%s")}
+css_fmt='img[alt=":%s:"],li[aria-label^=":%s:"]>div{object-position:-9999px -9999px;content:var(--a);background-image:var(--a)!important;--a:url("data:image/png;base64,%s")}
 '
 
 # Fetch url
@@ -57,7 +56,7 @@ while read -r l; do
 	unicode="${l#"${name}"\": \"}"
 
 	case $unicode in
-	\\[uU][[:alnum:]]*\\[uU]*\",)
+	\\[uU][[:alnum:]]*\\*\",)
 		unicode="${unicode%%\",}"
 		path="./blobmoji/png/128/emoji_u"
 
@@ -79,21 +78,21 @@ while read -r l; do
 		done
 
 		path="${path%_}.png"
-	;;
-	\\u[[:alnum:]]\",)
+		;;
+	\\u[[:alnum:]]*\",)
 		unicode="${unicode%%\",}"
 		path="./blobmoji/png/128/emoji_${unicode#\\}.png"
 		;;
-	\\U[[:alnum:]]\",)
+	\\U[[:alnum:]]*\",)
 		unicode="${unicode%%\",}"
-		path="./blobmoji/png/128/emoji_u${unicode##${unicode%%[!\\U0]*}}.png"
+		path="./blobmoji/png/128/emoji_u${unicode##"${unicode%%[!\\U0]*}"}.png"
 		;;
 	esac
 
+	
 	[ -f "$path" ] || continue
-
 	base64="$(base64 -w0 "$path")"
 	base64="${base64%%
 }"
-	printf "$css_fmt\n" "$name" "$unicode" "$name" "$base64"
-done <./mapping.go >./blob.css
+	printf "$css_fmt\n" "$name" "$name" "$base64"
+done <./mapping.go
