@@ -1,0 +1,11 @@
+#+TITLE: blosh
+[[https:github.com/diamondburned/disblob][disblob]] but in sh !!!
+
+#+begin_src sh
+$ time ./blosh >css.css
+    0m14.93s real     0m05.98s user     0m09.55s system
+#+end_src
+* Why?
+Because using Go for scripting is overkill !!!!!!
+
+Rewrite of https://github.com/ThatGeekyWeeb/blobash
